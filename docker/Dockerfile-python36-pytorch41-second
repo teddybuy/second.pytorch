@@ -1,0 +1,37 @@
+#docker build -f Dockerfile-python35-pytorch41  -t vacuum/pytorch:python35-pytorch41-simple-v1
+From nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
+#From nvidia/cuda:9.1-base-ubuntu16.04
+RUN apt update -y
+RUN apt-get install software-properties-common python-software-properties -y
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt update -y && apt install -y \
+    python3.6 \
+    python3-pip \
+    python3-tk \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libfontconfig1 \
+    libxrender1 \
+    vim \
+    less \
+    git 
+
+RUN python3.6 -m pip install torch torchvision opencv-python
+RUN python3.6 -m pip install shapely fire pybind11 pyqtgraph tensorboardX protobuf numba
+RUN apt-get install libboost-all-dev -y
+RUN apt-get install -y cuda-nvprof-9-1
+RUN apt-get install -y libsparsehash-dev
+RUN apt-get install -y python3.6-dev
+RUN python3.6 -m pip install pillow
+RUN rm -fr /usr/bin/python
+RUN rm -fr /usr/bin/python3
+RUN ln -s /usr/bin/python3.6 /usr/bin/python
+RUN ln -s /usr/bin/python3.6 /usr/bin/python3
+RUN git clone https://github.com/facebookresearch/SparseConvNet.git
+COPY extension.h /usr/local/lib/python3.6/dist-packages/torch/lib/include/torch/extension.h
+RUN cd SparseConvNet && bash build.sh && cd ..
+ENV NUMBAPRO_CUDA_DRIVER /usr/lib/x86_64-linux-gnu/libcuda.so
+ENV NUMBAPRO_NVVM /usr/local/cuda/nvvm/lib64/libnvvm.so
+ENV NUMBAPRO_LIBDEVICE /usr/local/cuda/nvvm/libdevice
+RUN apt install -y gdb psmisc

@@ -33,5 +33,12 @@ COPY extension.h /usr/local/lib/python3.6/dist-packages/torch/lib/include/torch/
 ENV NUMBAPRO_CUDA_DRIVER /usr/lib/x86_64-linux-gnu/libcuda.so
 ENV NUMBAPRO_NVVM /usr/local/cuda/nvvm/lib64/libnvvm.so
 ENV NUMBAPRO_LIBDEVICE /usr/local/cuda/nvvm/libdevice
-RUN apt install -y gdb psmisc unrar
+RUN apt install -y gdb psmisc unrar sudo
+RUN python3.6 -m pip install pyopengl
+RUN apt install -y python-opengl 
+#python-qt4 python-qt4-gl
+RUN python3.6 -m pip install pyqtgraph
+RUN python3.6 -m pip install pyqt5
+RUN apt install -y python3.6-tk
+RUN apt install -y x11-apps
 #RUN cd SparseConvNet && git checkout b596b10752136cd805b3b3f0507ac2a2e2d414fc && chmod +x build.sh && ./build.sh && cd ..
